@@ -7,8 +7,8 @@ from pathlib import Path
 class Config:
     headless: bool = False
     bypass_csp: bool = True
-    window_width: int = 1920
-    window_height: int = 1080
+    window_width: int = 1920  # not used
+    window_height: int = 1080  # not used
     fps: int = 30
     chromium_args: List[str] = field(
         default_factory=lambda: [

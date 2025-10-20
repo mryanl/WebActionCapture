@@ -178,8 +178,6 @@ if __name__ == "__main__":
         config = Config(
             headless=False,
             bypass_csp=True,
-            window_width=1920,
-            window_height=1080,
             start_url=start_url,
             # action_types=action_types,
             debug=False,
@@ -189,8 +187,6 @@ if __name__ == "__main__":
         config = Config(
             headless=False,
             bypass_csp=True,
-            window_width=1280,
-            window_height=720,
             fps=60,
             start_url=start_url,
             # action_types=action_types,

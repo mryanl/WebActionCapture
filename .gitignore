@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.conda/
+*.conda
+
+# Conda and pip cache
+conda-meta/
+pip-wheel-metadata/
+*.egg-info/
+*.egg
+
+# Build / distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Python coverage / test output
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.cache/
+
+# FFmpeg / capture artifacts (if you record or log)
+videos/
+images/
+logs/

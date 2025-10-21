@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Set
+from typing import List, Set, Optional
 from pathlib import Path
 
 
@@ -39,3 +39,4 @@ class Config:
     debug: bool = False  # When False: hide REQUEST_FAILED, BROWSER_* etc.
     video_dir: str = "videos"
     jsonl_dir: str = "logs"
+    storage_state_path: Optional[str] = None

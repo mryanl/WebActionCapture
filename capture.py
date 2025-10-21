@@ -97,11 +97,17 @@ class Recorder:
                     headless=self.config.headless, args=self.config.chromium_args
                 )
 
-                context = browser.new_context(
-                    viewport=None,
-                    no_viewport=True,
-                    bypass_csp=config.bypass_csp,
-                )
+                new_ctx_kwargs = {
+                    "viewport": None,
+                    "no_viewport": True,
+                    "bypass_csp": self.config.bypass_csp,
+                }
+                state_path = self.config.storage_state_path
+                if state_path and Path(state_path).exists():
+                    new_ctx_kwargs["storage_state"] = state_path
+                    self.pump.put(f"[RECORDER] Loaded storage_state from {state_path}")
+
+                context = browser.new_context(**new_ctx_kwargs)
 
                 context.add_init_script(self.config.init_script)
 
@@ -137,6 +143,19 @@ class Recorder:
                         try:
                             pgs[0].wait_for_timeout(100)  # ~100 ms
                         except TargetClosedError:
+                            if state_path:
+                                try:
+                                    Path(state_path).parent.mkdir(
+                                        parents=True, exist_ok=True
+                                    )
+                                    context.storage_state(path=state_path)
+                                    self.pump.put(
+                                        f"[RECORDER] Saved storage_state → {state_path}"
+                                    )
+                                except Exception as e:
+                                    self.pump.put(
+                                        f"[RECORDER] Failed to save storage_state: {e}"
+                                    )
                             break  # exit when browser is closed
 
                     else:
@@ -151,10 +170,11 @@ class Recorder:
                     )
                 except Exception as e:
                     self.pump.put(f"[RECORDER] Video stop failed: {e}")
+
             # Ensure pump stops
+            self.pump.put(f"[RECORDER] Stopped.")
             self.pump.stop()
             self.jsonl.stop()
-            print("exit", flush=True)
 
 
 if __name__ == "__main__":
@@ -179,6 +199,7 @@ if __name__ == "__main__":
             headless=False,
             bypass_csp=True,
             start_url=start_url,
+            storage_state_path="state/amazon_state.json",
             # action_types=action_types,
             debug=False,
         )
@@ -190,15 +211,11 @@ if __name__ == "__main__":
             fps=60,
             start_url=start_url,
             # action_types=action_types,
+            storage_state_path="state/amazon_state.json",
             debug=False,
         )
     else:
         print(f"Unsupported platform: {system}")
         exit(1)
 
-    config = Config(
-        headless=False,
-        bypass_csp=True,
-        debug=False,
-    )
     Recorder(config).start()
